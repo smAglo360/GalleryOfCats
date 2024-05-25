@@ -96,6 +96,9 @@ img, a {
   .main {
     padding: 0 1.6rem;
   }
+  .card {
+    width: 100% !important;
+  }
 }
 
 .nav {
@@ -202,9 +205,12 @@ img, a {
   margin-bottom: 2.4rem;
 }
 
+.card__description {
+  height: 100%;
+}
+
 .card__description, .card__btn {
   padding: 2.4rem;
-  margin-top: auto;
 }
 
 .card__description p {

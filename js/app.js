@@ -43,7 +43,7 @@ async function initialBreeds(page) {
     .then((userData) => {
       userData.forEach((breed) => {
         breeds.id.push(breed.id);
-        breeds.description.push(breed.temperament);
+        breeds.description.push(breed.description);
         breeds.name.push(breed.name);
         breeds.wikipedia_url.push(breed.wikipedia_url);
       });
