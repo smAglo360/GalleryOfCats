@@ -83,6 +83,7 @@ formBreed.addEventListener("submit", (e) => {
   breeds.id = [];
   breeds.description = [];
   breeds.name = [];
+  breeds.wikipedia_url = [];
 });
 
 async function searchImage(breeds) {
