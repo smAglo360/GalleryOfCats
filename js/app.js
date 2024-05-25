@@ -54,6 +54,7 @@ async function initialBreeds(page) {
 initialBreeds(0).catch((err) => console.log(err));
 
 async function searchBreed(breed) {
+  cardContainer.innerHTML = "";
   await fetch(searchBreedUrl + breed)
     .then((response) => {
       if (!response.ok) {
@@ -61,10 +62,14 @@ async function searchBreed(breed) {
       }
       return response.json();
     })
-    .then((userData) => {
-      const ids = userData.map((item) => item.id);
-      ids.forEach((id) => breeds.id.push(id));
-      return searchImage(breeds);
+    .then(async (userData) => {
+      userData.forEach((breed) => {
+        breeds.id.push(breed.id);
+        breeds.description.push(breed.description);
+        breeds.name.push(breed.name);
+        breeds.wikipedia_url.push(breed.wikipedia_url);
+      });
+      return await searchImage(breeds);
     })
     .finally(() => {
       breeds.url = [];
@@ -75,13 +80,14 @@ formBreed.addEventListener("submit", (e) => {
   e.preventDefault();
   searchBreed(inputBreed.value).catch((err) => console.log(err));
   inputBreed.value = "";
-  breeds.id.splice(0, breeds.id.length);
+  breeds.id = [];
+  breeds.description = [];
+  breeds.name = [];
 });
 
 async function searchImage(breeds) {
   console.log(breeds);
-  for (const id of breeds.id) {
-    console.log(id);
+  await breeds.id.forEach((id) => {
     fetch(searchImageUrl + id)
       .then((response) => {
         if (!response.ok) {
@@ -90,11 +96,10 @@ async function searchImage(breeds) {
         return response.json();
       })
       .then((userData) => {
-        console.log(userData);
         userData.map((item) => breeds.url.push(item.url));
         return putImagesIntoCard(breeds);
       });
-  }
+  });
 }
 
 async function randomPictures() {
@@ -115,15 +120,15 @@ randomKittiesBtn.addEventListener("click", randomPictures);
 
 const putImagesIntoCard = (data) => {
   cardContainer.innerHTML = "";
-  data.url.forEach((img, index) => {
+  data.id.forEach((id, index) => {
     const cardHTML = `<div class="card">
           <div class="card__picture">
-            <img src="${img}" alt=""/>
+            <img src="${data.url[index]}" alt=""/>
           </div>
           <div class="card__description">
             <h4>${breeds.name[index]}</h4>
             <p>
-              ${data.description[index].replace(";", "")};
+              ${data.description[index]};
             </p>
           </div>
           <a href="${breeds.wikipedia_url[index]}" target="_blank" class="card__btn">Learn more &rarr;</a>
