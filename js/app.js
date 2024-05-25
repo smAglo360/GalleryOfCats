@@ -1,3 +1,8 @@
+/* I'm too lazy to fix this code
+<li class="nav__item">
+    <a class="nav__link" href="#">Why this site exist</a>
+</li> fix it later */
+
 const apiKey =
   "live_4SEdY99VVa1ExR1NMNGWf4xJ29z49FcrMaEV9eFsZMNoTCCYQhYDUsm87JxBfCz3";
 const randomCatsUrl = `https://api.thecatapi.com/v1/images/search?api_key=${apiKey}&limit=12`;
@@ -67,7 +72,7 @@ async function searchBreed(breed) {
       breeds.url = [];
     });
 }
-galleryBtn.addEventListener("click", (e) => searchBreed("Abyssinian"));
+galleryBtn.addEventListener("click", (e) => initialBreeds());
 formBreed.addEventListener("submit", (e) => {
   e.preventDefault();
   searchBreed(inputBreed.value).catch((err) => console.log(err));

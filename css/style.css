@@ -57,7 +57,7 @@ img, a {
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 420px) {
   html {
     font-size: 55%;
   }
@@ -74,6 +74,7 @@ img, a {
   .nav {
     display: block;
     order: 1;
+
     margin-bottom: 3.2rem;
   }
   .logo-container {
