@@ -46,9 +46,7 @@ async function initialBreeds(page) {
         breeds.description.push(breed.temperament);
         breeds.name.push(breed.name);
         breeds.wikipedia_url.push(breed.wikipedia_url);
-        console.log(breeds.description);
       });
-      console.log(breeds.id);
       return searchImage(breeds);
     });
 }
