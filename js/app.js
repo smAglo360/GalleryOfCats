@@ -1,151 +1,104 @@
-/* I'm too lazy to fix this code
-<li class="nav__item">
-    <a class="nav__link" href="#">Why this site exist</a>
-</li> fix it later */
-
 const apiKey =
   "live_4SEdY99VVa1ExR1NMNGWf4xJ29z49FcrMaEV9eFsZMNoTCCYQhYDUsm87JxBfCz3";
-const randomCatsUrl = `https://api.thecatapi.com/v1/images/search?api_key=${apiKey}&limit=12`;
 
-const initialBreedsUrl = `https://api.thecatapi.com/v1/breeds?api_key=${apiKey}&limit=12&page=`;
-const searchBreedUrl = `https://api.thecatapi.com/v1/breeds/search?api_key=${apiKey}&q=`;
-const searchImageUrl = `https://api.thecatapi.com/v1/images/search?api_key=${apiKey}&limit=1&breed_id=`;
+const initialBreedsUrl = `https://api.thecatapi.com/v1/breeds?limit=12&page=`;
+const searchBreedUrl = `https://api.thecatapi.com/v1/breeds/search?&attach_image=1&q=`;
 
+//Dom elements
 const cardContainer = document.querySelector(".card-container");
-const randomKittiesBtn = document.querySelector("#random-kitties");
-const galleryBtn = document.querySelector("#gallery");
-const formBreed = document.querySelector(".search-form");
-const inputBreed = document.querySelector(".search-form__input");
+const btnPrevious = document.querySelector("#previous");
+const btnNext = document.querySelector("#next");
 
 let page = 0;
 
-const images = {
-  url: [],
-};
-
 const breeds = {
   id: [],
+  reference_image_id: [],
   description: [],
   url: [],
   name: [],
   wikipedia_url: [],
 };
 
-async function initialBreeds(page) {
+const fetchInitialBreeds = async () => {
   cardContainer.innerHTML = "";
-  await fetch(initialBreedsUrl + page)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((userData) => {
-      userData.forEach((breed) => {
-        breeds.id.push(breed.id);
-        breeds.description.push(breed.description);
-        breeds.name.push(breed.name);
-        breeds.wikipedia_url.push(breed.wikipedia_url);
+  clearBreeds(breeds);
+  await fetch(initialBreedsUrl + page, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+  })
+    .then((response) =>
+      !response.ok ? console.error("Something wrong") : response.json(),
+    )
+    .then((data) => {
+      data.forEach((breed) => {
+        breed.hasOwnProperty("image") ? putBreedsIntoObject(breed) : null;
       });
-      return searchImage(breeds);
     });
-}
+  return breeds != null ? putImagesIntoCard(breeds) : null;
+};
 
-initialBreeds(0).catch((err) => console.log(err));
-
-async function searchBreed(breed) {
+const putImagesIntoCard = function (breeds) {
   cardContainer.innerHTML = "";
-  await fetch(searchBreedUrl + breed)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then(async (userData) => {
-      userData.forEach((breed) => {
-        breeds.id.push(breed.id);
-        breeds.description.push(breed.description);
-        breeds.name.push(breed.name);
-        breeds.wikipedia_url.push(breed.wikipedia_url);
-      });
-      return await searchImage(breeds);
-    })
-    .finally(() => {
-      breeds.url = [];
-    });
-}
-galleryBtn.addEventListener("click", (e) => initialBreeds());
-formBreed.addEventListener("submit", (e) => {
-  e.preventDefault();
-  searchBreed(inputBreed.value).catch((err) => console.log(err));
-  inputBreed.value = "";
-  breeds.id = [];
-  breeds.description = [];
-  breeds.name = [];
-  breeds.wikipedia_url = [];
-});
-
-async function searchImage(breeds) {
-  console.log(breeds);
-  await breeds.id.forEach((id) => {
-    fetch(searchImageUrl + id)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((userData) => {
-        userData.map((item) => breeds.url.push(item.url));
-        return putImagesIntoCard(breeds);
-      });
-  });
-}
-
-async function randomPictures() {
-  await fetch(randomCatsUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((userData) => {
-      userData.map((item) => images.url.push(item.url));
-      return putRandomImages(images);
-    });
-}
-
-randomKittiesBtn.addEventListener("click", randomPictures);
-
-const putImagesIntoCard = (data) => {
-  cardContainer.innerHTML = "";
-  data.id.forEach((id, index) => {
+  reverseBreeds(breeds);
+  breeds.id.forEach((id, index) => {
     const cardHTML = `<div class="card">
           <div class="card__picture">
-            <img src="${data.url[index]}" alt=""/>
+            <img src="${breeds.url[index]}" alt="" />
           </div>
           <div class="card__description">
             <h4>${breeds.name[index]}</h4>
             <p>
-              ${data.description[index]};
+              ${breeds.description[index]}
             </p>
           </div>
-          <a href="${breeds.wikipedia_url[index]}" target="_blank" class="card__btn">Learn more &rarr;</a>
-      </div>`;
+          <a href="${breeds.wikipedia_url[index]}" target="_blank" class="btn btn--card">Learn more &rarr;</a>`;
     cardContainer.insertAdjacentHTML("afterbegin", cardHTML);
   });
 };
 
-const putRandomImages = (data) => {
-  cardContainer.innerHTML = "";
-  data.url.forEach((img) => {
-    const cardHTML = `<div class="card" style="width: 36rem; height: 40rem">
-          <div  class="card__picture">
-            <img style="width: 100%; height: 40rem" src="${img}" alt="" />
-          </div>
-      </div>`;
-    cardContainer.insertAdjacentHTML("afterbegin", cardHTML);
-  });
+const changePaginationNumber = function (page) {
+  document.querySelector("#page").textContent = page + 1;
 };
+
+/* I put that into functions without ideas why*/
+const reverseBreeds = (breeds) => {
+  for (const [key, value] of Object.entries(breeds)) {
+    value.reverse();
+  }
+};
+const clearBreeds = (breeds) => {
+  for (const [key, value] of Object.entries(breeds)) {
+    value.length = 0;
+  }
+};
+
+const putBreedsIntoObject = function (breed) {
+  breeds.id.push(breed.reference_image_id);
+  breeds.url.push(breed.image.url);
+  breeds.name.push(breed.name);
+  breeds.description.push(breed.description);
+  breeds.wikipedia_url.push(breed.wikipedia_url);
+};
+
+btnPrevious.addEventListener("click", (e) => {
+  e.preventDefault();
+  page--;
+  if (page >= 0) {
+    changePaginationNumber(page);
+    fetchInitialBreeds().catch((error) => console.error(error));
+  }
+});
+btnNext.addEventListener("click", (e) => {
+  e.preventDefault();
+  page++;
+  if (page <= 5) {
+    changePaginationNumber(page);
+    fetchInitialBreeds().catch((error) => console.error(error));
+  }
+});
+
+//Logic, i know that I have put it into class but nah
+fetchInitialBreeds().catch((error) => console.error(error));
