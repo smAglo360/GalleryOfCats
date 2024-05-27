@@ -14,17 +14,40 @@ html {
   line-height: 1;
   font-family: "Roboto", sans-serif;
   box-sizing: inherit;
+  scroll-behavior: smooth;
 }
 
 img, a {
   display: block;
+}
+/* ********** Btns *********** */
+
+.btn {
+  color: #ff2424;
+  text-decoration: none;
+  font-size: 1.6rem;
+  padding: 1.6rem;
+}
+
+.btn--card {
+  padding: 2.4rem;
+}
+
+.btn--filters {
+  padding: 0.8rem 1.6rem;
+}
+
+.btn--pagination {
+  border-radius: 8px;
+  color: #fff;
+  background-color: rgba(255, 36, 36, 0.8);
 }
 
 /* ********** Heading *********** */
 .heading__secondary {
   font-size: 3.6rem;
   text-align: center;
-  margin-bottom: 8rem;
+  margin-bottom: 4.8rem;
 }
 
 /* ********** Reusable *********** */
@@ -176,6 +199,38 @@ img, a {
   margin-left: -2rem;
 }
 
+/* ********** Filters *********** */
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.6rem;
+  margin-bottom: 3.6rem;
+}
+
+.filters-form {
+  display: flex;
+  gap: 1.6rem;
+}
+.filters-form select {
+  padding: 0.8rem;
+  border-radius: 24px;
+  outline: none;
+  background-color: #fff;
+  border: 1px solid #000;
+}
+
+.btn--filters {
+  border-radius: 24px;
+  border: 1px solid #000;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
 /* ********** Card *********** */
 
 .card-container {
@@ -184,6 +239,7 @@ img, a {
   align-items: center;
   justify-items: center;
   gap: 3.6rem;
+  margin-bottom: 4.8rem;
 }
 
 .card {
@@ -195,6 +251,7 @@ img, a {
   width: 100%;
   height: 100%;
   border: 1px solid rgba(0, 0, 0, 0.25);
+  transition: all 0.3s;
 }
 
 .card__picture img{
@@ -209,7 +266,7 @@ img, a {
   height: 100%;
 }
 
-.card__description, .card__btn {
+.card__description {
   padding: 2.4rem;
 }
 
@@ -226,9 +283,51 @@ img, a {
   margin-bottom: 1.6rem;
 }
 
-.card__btn {
-  color: #ff2424;
-  text-decoration: none;
-  font-size: 1.6rem;
+/* *********** Pagination ********** */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 9.6rem;
+}
+
+#page {
+  background-color: rgba(255, 36, 36, 0.8);
+  padding: 1.2rem 1.6rem;
+  border-radius: 8px;
+  font-size: 2rem;
+  color: #fff;
+}
+
+/* *********** Footer ********** */
+.footer {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 4.8rem;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.footer h2 {
+  text-align: start;
+  margin-bottom: 2.4rem;
+}
+.footer__description {
+  grid-column: 1 / 8;
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+.footer__picture {
+  grid-column: 9 / 12;
+  grid-row: 1 / 3;
+}
+.footer__picture img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.footer .btn {
+  padding: 0;
+  grid-column: 1 / 4;
 
 }
